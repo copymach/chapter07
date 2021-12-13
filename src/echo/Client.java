@@ -9,80 +9,77 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class Client {
 
 	public static void main(String[] args) throws IOException {
-		
+
 		Socket socket = new Socket();
-		
-		System.out.println("클라이언트 시작");
-		
-		System.out.println("서버연결 요청");
-//		자키컴퓨터 ip넣지말것
-		
-//		원주니
-//		serverSocket.bind(new InetSocketAddress("118.36.228.129", 10001));
-		socket.connect(new InetSocketAddress("192.168.0.14", 10001));
-		
-//		내꺼
-//		socket.connect(new InetSocketAddress("192.168.1.24", 10001));
-		
-		System.out.println("연결되었습니다");
-		
-		
-//		메시지 보내기 스트림
-		OutputStream os = socket.getOutputStream(); //주스트림
+
+		System.out.println("<클라이언트 시작>");
+		System.out.println("=======================================");
+
+		System.out.println("[서버에 연결을 요청합니다.]");
+
+		socket.connect(new InetSocketAddress("192.168.0.56", 10001));
+
+		System.out.println("[서버에 연결되었습니다.]");
+
+		// 메세지 보내기 스트림
+		OutputStream os = socket.getOutputStream(); // 주스트림
 		OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
 		BufferedWriter bw = new BufferedWriter(osw);
-		
-//		서버단에서 보낸 메시지 받기 스트림
+
+		// 메세지 받기 스트림
 		InputStream is = socket.getInputStream();
 		InputStreamReader isr = new InputStreamReader(is, "UTF-8");
 		BufferedReader br = new BufferedReader(isr);
-		
-//		메시지 보내기
-//		C:\javaStudy\workspace\chapter06\bin
-//		java echo.ex01.Client
-		
-		
-//		키보드 입력 Scanner
-		Scanner sc = new Scanner(System.in);
-		
-//		반복구간
-		while (true) {
-			System.out.print("메시지를 입력하세요 >>");
-			
-			String str = sc.nextLine();		
-			if ("/q".equals(str) ) { // str == "/q" string을 바로 못넣는다 단순 주소비교
-//				str.equals("/q") 비교하면 null point가 생길 수 있으니 위의 방식으로 하면 에러없음
-				System.out.println("종료합니다");
-				break;
-			} 
-			
-//			String str = "안녕하니?";
-			bw.write(str);
-			bw.newLine();
-			bw.flush(); //null 에러메시지가 나오면 비우기
-			
-//			메시지 받기
-			String reMsg = br.readLine();
-			System.out.println("서버에서 받은 메시지 : "+reMsg);
 
+		// Scanner (키보드 입력용)
+		//Scanner sc = new Scanner(System.in);
+		
+		InputStream in = System.in;
+		InputStreamReader sisr = new InputStreamReader(in);
+		BufferedReader sbr = new BufferedReader(sisr);
+		
+		
+		while(true) {
+			//String str = sc.nextLine();
+			String str = sbr.readLine();
 			
 			
+			if("/q".equals(str)) {
+				System.out.println("[종료키 입력]");
+				break;
+			}
+
+			// 메세지 보내기
+			bw.write("[황일영] "+ str);
+			bw.newLine();
+			bw.flush();
+
+			// 메세지 받기
+			String reMsg = br.readLine();
+			System.out.println("server:[" + reMsg + "]");
+
 		}
 		
+		System.out.println("=======================================");
+		
+		//System.out.println("<클라이언트종료>");
+		OutputStream out = System.out;
+		OutputStreamWriter posr = new OutputStreamWriter(out);
+		BufferedWriter pbw = new BufferedWriter(posr);
 		
 		
+//		Scanner, println 구현
+		pbw.write("<클라이어트종료> 스트림사용구현");
+		pbw.newLine();
+		pbw.flush();
 		
-		
-		System.out.println("클라가 종료");
+		//sc.close();
 		bw.close();
 		socket.close();
-		sc.close();
-		
 	}
 
 }
